@@ -13,7 +13,7 @@ UML::Sequence::Svg - converts xml sequence files to svg
 This module supports the seq2svg.pl script like Pod::Html supports pod2html.
 The array passed to seq2svg.pl should have the following form:
 
-    [-o output_file_name] [input_file_name]
+    ([-o output_file_name], [input_file_name])
 
 By default input is from standard in and output is to standard out.
 

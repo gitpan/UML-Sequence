@@ -8,7 +8,7 @@ genericseq - generates xml sequence diagrams from various inputs
 
 =head1 USAGE
 
-    genericseq -t 'Title' SeqModule [args_for_SeqModule...]
+    genericseq.pl -t 'Title' SeqModule [args_for_SeqModule...]
 
 =head1 DESCRIPTION
 

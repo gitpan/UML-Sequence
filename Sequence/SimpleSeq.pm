@@ -11,7 +11,7 @@ UML::Sequence::SimpleSeq - turns simple outlines (see below) into UML sequence d
 =head1 SYNOPSIS
 
     genericseq.pl UML::Sequence::SimpleSeq outline_file > sequence.xml
-    seq2svg sequence.xml > sequence.svg
+    seq2svg.pl sequence.xml > sequence.svg
 
 OR
 
@@ -114,10 +114,6 @@ sub parse_signature {
 
 1;
 
-=head1 EDIT HISTORY
-
-  0.01 Jan 2003  Initial release.
-
 =head1 AUTHOR
  
 Phil Crow, <philcrow2000@yahoo.com>
@@ -128,3 +124,8 @@ Copyright 2003, Philip Crow, all rights reserved.  You may modify and/or
 redistribute this code in the same manner as Perl itself.
 
 =cut
+
+# EDIT HISTORY
+#
+#  0.01 Jan 2003  Initial release.
+

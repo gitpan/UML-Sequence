@@ -10,7 +10,7 @@ my $out_rec     = UML::Sequence::PerlSeq
 
 chomp(my @correct_out = <DATA>);
 
-is_deeply($out_rec, \@correct_out, "perl Dprof trace");
+is_deeply($out_rec, \@correct_out, "perl CallSeq trace");
 
 my $methods     = UML::Sequence::PerlSeq->grab_methods($out_rec);
 
@@ -21,26 +21,20 @@ my @correct_methods = (
 "Die::roll",
 "DiePair::total",
 "DiePair::doubles",
-"DiePair::to_string",
 );
 
+#"DiePair::to_string",
 is_deeply($methods, \@correct_methods, "method list");
 
 unlink "tmon.out";
 
 __DATA__
-main::BEGIN
-   strict::import
-      strict::bits
-DiePair::BEGIN
-   overload::import
-      overload::OVERLOAD
-DiePair::new
-   Die::new
-   Die::new
-DiePair::roll
-   Die::roll
-   Die::roll
-DiePair::total
-DiePair::doubles
-DiePair::to_string
+main
+  DiePair::new
+    Die::new
+    Die::new
+  DiePair::roll
+    Die::roll
+    Die::roll
+  DiePair::total
+  DiePair::doubles

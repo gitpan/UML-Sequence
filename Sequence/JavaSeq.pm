@@ -2,6 +2,7 @@ package UML::Sequence::JavaSeq;
 use UML::Sequence::SimpleSeq;
 
 @ISA = ('UML::Sequence::SimpleSeq');
+$VERSION = '0.02';
 
 use strict;
 use warnings;
@@ -27,10 +28,10 @@ in Hello.methods.  The former provides methods L<UML::Sequence> needs to produce
 an xml sequence.  Look in the provided Hello.methods to see what options
 you have for controlling output.
 
-For this class to work, you must have Seq.class and tools.jar (the one
-containing the the jpda) in your class path.  Your jpda must be happy.
-(The jpda is the Java Platform Debugger Architecture.  It ships with
-java 1.3.)
+For this class to work, you must have Seq.class (and its friends) and
+tools.jar (the one containing the the jpda) in your class path.  Your
+jpda must be happy.  (The jpda is the Java Platform Debugger Architecture.
+It ships with java 1.3.)
 
 =head1 grab_outline_text
 
@@ -46,7 +47,7 @@ sub grab_outline_text {
     my @retval;
     my $method_file     = shift;
 
-    `java Seq $method_file SEQ.TMP @_ 2>&1 > /dev/null`;
+    `java Seq $method_file SEQ.TMP @_ > /dev/null`;
     
     open SEQ, "SEQ.TMP" or die "Couldn't run java Seq: $!\n";
     while (<SEQ>) {
@@ -57,5 +58,11 @@ sub grab_outline_text {
     unlink "SEQ.TMP";
     return \@retval;
 }
+
+#  Edit History
+#  0.01 Jan 28 2003  Initial Release
+#  0.02 Feb 27 2003  Revised backtick command so STDERR from the java Seq
+#                    comes to the screen (before it went to /dev/null)
+#                    Revised Seq.java so it shows instances separately
 
 1;

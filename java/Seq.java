@@ -1,8 +1,12 @@
 // The following classes are from the Java Debugger Platform Architecture jpda
+// The ship with SDK 1.3+ in tools.jar
 import com.sun.jdi.VirtualMachine;
 import com.sun.jdi.Bootstrap;
 import com.sun.jdi.Method;
+import com.sun.jdi.ObjectReference;
+import com.sun.jdi.ReferenceType;
 import com.sun.jdi.ThreadReference;
+import com.sun.jdi.StackFrame;
 import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.LaunchingConnector;
 
@@ -33,7 +37,9 @@ import java.util.Set;
 /**
  *  This class produces outlines of call sequences for other Java programs
  *  by using debugger hooks.  It is useful for building UML sequence diagrams.
- *  See the documentation for {@link #main} for usage.
+ *  See the documentation for {@link #main} for usage.  See UML::Sequence
+ *  on CPAN for Perl scripts to make the diagrams.  In particular, see
+ *  genericseq.pl and UML::Sequence::JavaSeq.pm.
  */
 public class Seq {
     VirtualMachine      vm;
@@ -52,6 +58,15 @@ public class Seq {
     ArrayList           interestingClasses;
     PrintStream         outputStream;
     String              excludeFilter;
+
+    // objects is keyed by object hash code storing object's number.
+    // Numbers are per class and are issued sequentially from 1 during
+    // constructor processing.
+    HashMap             objects                 = new HashMap();
+    // nextObjectNumber is keyed by class name storing the most recently
+    // used number.  Preincrement this to use it.
+    HashMap             nextObjectNumber        = new HashMap();
+
 
     /**
      *  Most callers will use only this method.
@@ -214,21 +229,78 @@ public class Seq {
     // user is interested in it.  Then increment the call sequence depth
     // and restart the virtual machine.
     public void methodEntryEvent(MethodEntryEvent event) {
-//        ThreadReference thread = event.thread();
-
         if (eventStatus == INITIAL_EVENT_STATUS) {
             switchToRegularStatus();
         }
-        Method method    = event.method();
-        String signature = getSignature(method);
 
-        Object includeIt = interestingMethods.get(signature);
+        Method method     = event.method();
+        String signature  = grabSignature(method);
+        String objectName = grabInstanceName(event, method);
+
+        Object includeIt  = interestingMethods.get(signature);
+
         if (everythingIsInteresting || includeIt != null) {
-            outputStream.println(getIndentString() + signature);
+            outputStream.println(formIndentString() + objectName + signature);
         }
 
         indent++;
         vm.resume();
+    }
+
+    // Returns the manufactured name of the instance which is operative
+    // in the current method (the one called this in that method).
+    // Maintains the list of objects by number using two hashes:
+    // objects and nextObjectNumber.  For example the second Roller object
+    // used in a program will yield roller2.
+    private String grabInstanceName(MethodEntryEvent event, Method method) {
+        ObjectReference thisRef    = grabStackTopReference(event);
+
+        if (thisRef == null) { // the top method is static => no this instance
+            return "";
+        }
+
+        String          type       = thisRef.referenceType().name();
+        Integer         thisCode   = new Integer(thisRef.hashCode());
+        Integer         countI     = null;
+
+        if (method.isConstructor()) {  // store the hash code
+            countI     = (Integer)nextObjectNumber.get(type);
+            int count  = 0;
+            if (countI == null) { count = 1;                     }
+            else                { count = countI.intValue() + 1; }
+
+            countI     = new Integer(count);
+            nextObjectNumber.put(type, countI);
+
+            objects.put(thisCode, countI);
+        }
+        else {  // regular instance method (not constructor, not static)
+            countI = (Integer)objects.get(thisCode);
+        }
+        return lcfirst(type) + countI.toString() + ":";
+    }
+
+    // Examines the current stack frame returning the ObjectReference
+    // of the instance operative in the method on top of the stack.
+    // Caller can fish in the returned reference for the type name of
+    // the operative instance
+    private ObjectReference grabStackTopReference(MethodEntryEvent event) {
+        ThreadReference thread     = event.thread();
+        StackFrame      frame      = null;
+        try {
+            frame  = thread.frame(0);
+        } catch (Exception e) { }
+        // com.sun.jdi.IncompatibleThreadStateException
+
+        return frame.thisObject();
+    }
+
+    // This should be part of java.lang.String.  It takes a String and
+    // returns it with the first character in lower case Roller becomes roller.
+    private static String lcfirst(String in) {
+        String first = in.substring(0, 1);
+        String rest  = in.substring(1);
+        return first.toLowerCase() + rest;
     }
 
     // turn off initial entry request
@@ -239,7 +311,7 @@ public class Seq {
 
         Iterator       iter  = interestingClasses.iterator();
         if (iter.hasNext()) {
-            while (iter.hasNext()) {
+            while (iter.hasNext()) {  // make one filter for each class
                 String className = (String)iter.next();
 
                 MethodEntryRequest  entryRequest;
@@ -271,7 +343,7 @@ public class Seq {
     // builds an official signature like
     // com.company.package.ClassName.method(java.lang.String[], float)
     // uses assembleArgs to make the argument list
-    private String getSignature(Method method) {
+    private String grabSignature(Method method) {
         return method.declaringType().name()
                + "." + method.name() + "("
                + assembleArgs(method) + ")";
@@ -279,7 +351,7 @@ public class Seq {
 
     // gives a string which can be printed before the signature to
     // show the current call sequence depth visually
-    private String getIndentString() {
+    private String formIndentString() {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < indent; i++) {
             sb.append("  ");

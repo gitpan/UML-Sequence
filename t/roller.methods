@@ -4,4 +4,3 @@ DiePair::roll
 Die::roll
 DiePair::total
 DiePair::doubles
-DiePair::to_string

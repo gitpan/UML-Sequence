@@ -1,0 +1,80 @@
+Here are the examples in this directory:
+
+PERL:
+
+Instances show up separately:
+
+rollerinst     - a script which rolls two DiePairs
+DiePair.pm     - an OO module which manages two Die objects
+Die.pm         - an OO module which produces random integers like a die
+methods        - a list of methods to show on the diagram
+rollerinst.xml - a sequence xml for rollerinst
+rollerinst.svg - that sequence diagram in svg format
+rollerinst.png - that sequence diagram in png format
+
+These diagrams were produced with these commands:
+genericseq.pl PerlOOSeq methods rollerinst > rollerinst.xml
+seq2svg.pl rollerinst.xml > rollerinst.svg
+cd $BATIK_HOME
+java -jar batik-rasterizer.jar ~/samples/rollerinst.svg
+
+Using PerlOOSeq separates the two DiePair instances into separate columns
+in the diagram.  It does the same for all four Die instances.  See below
+for what happens when these are combined.
+
+Instances conflate onto a single life line:
+
+roller     - a script which rolls one DiePair
+DiePair.pm, Die.pm, and methods (see above)
+roller.xml - a sequence diagram for roller
+roller.svg - that sequence diagram in svg format
+roller.png - that sequence diagram in png format
+
+These diagrams were produced with these commands:
+genericseq.pl PerlSeq methods roller > roller.xml
+seq2svg.pl roller.xml > roller.svg
+cd $BATIK_HOME
+java -jar batik-rasterizer.jar ~/samples/roller.svg
+
+Using PerlSeq conflates all instances of any class onto the same life line.
+Note that both Die objects share a single life line in the picture.
+For many Perl programs there are no objects and this is ideal.  For genuine
+multi-object programs, see PerlOOSeq above.
+
+TEXT OUTLINES:
+
+washcar     - a text file outlining the steps in washing a car
+washcar.xml - a sequence diagram for washing the car
+washcar.svg - that diagram in svg format
+washcar.png - that diagram in png format
+
+These diagrams were produced with these commands:
+genericseq.pl -t "Wash Car" SimpleSeq washcar > washcar.xml
+seq2svg.pl washcar.xml > washcar.svg
+java -jar batik-rasterizer.jar ~/samples/washcar.svg
+
+Using SimpleSeq you can easily produce a diagram from a text file in few
+minutes (or seconds).
+Any invocation of genericseq.pl can include a -t title flag as shown in
+the washcar example.
+
+JAVA:
+
+Roller.java        - rolls a DiePair and prints the results
+DiePair.java       - class to manage two Die objects
+Die.java           - class to generate random integers like physical dice do
+Rollerjava.methods - requests all methods from above classes (documented)
+rollerjava.xml     - a sequence diagram for Roller.java
+rollerjava.svg     - that diagram in svg format
+rollerjava.png     - that diagram in png format
+
+These diagrams were produced with these commands:
+genericseq.pl JavaSeq Rollerjava.methods Roller > rollerjava.xml
+seq2svg.pl rollerjava.xml > rollerjava.svg
+java -jar batik-rasterizer.jar ~/samples/rollerjava.svg
+
+Using JavaSeq you can produce diagrams for Java programs as they run.
+You must have an SDK 1.3 or higher (which includes the jpda in its tools.jar).
+The tools.jar file and Seq.class must be in your CLASSPATH.  From my tests it
+seems like your computer may need to have a networking interface up for this
+to work.

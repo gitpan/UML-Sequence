@@ -17,6 +17,9 @@ and/or modify these programs under the same terms as Perl itself.
 
 DESCRIPTION
 
+There are samples in the samples directory in the distribution.  The
+samples have the code and pictures (in svg and png formats).
+
 Simple Sequences
 
 You can create a sequence from an outline.  Type something like this:

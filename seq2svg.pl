@@ -4,11 +4,11 @@ use warnings;
 
 =head1 NAME
 
-seq2svg - a script to convert xml sequence diagrams to svg
+seq2svg.pl - a script to convert xml sequence diagrams to svg
 
 =head1 USAGE
 
-    seq2svg [-o output_file_name] [input_file_name]
+    seq2svg.pl [-o output_file_name] [input_file_name]
 
 =cut
 

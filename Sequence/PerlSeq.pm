@@ -4,7 +4,7 @@ use     warnings;
 
 =head1 NAME
 
-UML::Sequence::PerlSeq - for use with genericseq script, works on Perl programs
+UML::Sequence::PerlSeq - for use with genericseq.pl script, works on Perl programs
 
 =head1 SYNOPSIS
 
@@ -41,6 +41,8 @@ Order is not important.
 use strict;
 use warnings;
 
+our $VERSION = "0.02";
+
 my $methods_file;
 
 =head1 grab_outline_text
@@ -54,22 +56,22 @@ Returns an outline (suitable for printing or passing on to SeqOutline).
 sub grab_outline_text {
     shift;  # discard class name
     $methods_file = shift;
-    _run_dprof(@_);
-    return _read_dprofpp();
+    _profile(@_);
+    return _read_tmon();
 }
 
-sub _run_dprof {
-    my $program = shift;
-    `perl -d:DProf $program @_`;
+sub _profile {
+    `perl -d:CallSeq @_`;
 }
 
-sub _read_dprofpp {
+sub _read_tmon {
     my @retval;
-    open DPROF, "dprofpp -T |" or die "Couldn't run dprofpp\n";
-    while (<DPROF>) {
+    open TMON, "tmon.out" or die "Couldn't read tmon.out from Devel::CallSeq\n";
+    while (<TMON>) {
         chomp;
         push @retval, $_;
     }
+    unlink "tmon.out";
     return \@retval;
 }
 
@@ -107,5 +109,11 @@ sub parse_signature {
 
     return wantarray ? ($class, $method) : $class;
 }
+
+# EDIT HISTORY:
+# 0.01  Jan 27, 2003  Initial Release
+# 0.02  Feb 28, 2003  Began using Devel::CallSeq instead of Devel::DProf
+#                     and dprofpp -T, this corrects some of the method names
+#                     which DProf incorrectly reports as BEGIN
 
 1;

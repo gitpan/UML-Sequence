@@ -1,6 +1,6 @@
 =head1 NAME
 
-UML::Sequence - This class makes xml descriptions of UML sequence diagrams.
+UML::Sequence - This package makes UML sequence diagrams, often by running the code.
 
 =head1 SYNOPSIS
 
@@ -15,7 +15,7 @@ To use this package, or see how to use it, see L<genericseq.pl> and
 L<seq2svg.pl>.
 
 This class helps produce UML sequence diagrams.  build_xml_sequence
-returns a string (suitable for printing to a file) which the L<seq2svg.pl>
+returns a string (suitable for printing to a file) which the seq2svg.pl
 script converts into svg.
 
 To control the appearance of the sequence diagram, pass to the constructor:
@@ -41,7 +41,7 @@ require 5.005_62;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use UML::Sequence::Activation;
 
@@ -258,6 +258,10 @@ sub _build_class_list {
 =head1 EDIT HISTORY
 
   0.01 Jan 2003  Initial release.
+  0.02 Feb 2003  Corrected diagrams so separate instances have their own life
+                 lines.
+                 Included samples directory with instructions for producing
+                 the samples (see samples/README in the distribution).
 
 =head1 AUTHOR
  
