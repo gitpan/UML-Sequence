@@ -8,10 +8,12 @@ BEGIN { use_ok('UML::Sequence::PerlOOSeq'); }
 my $out_rec     = UML::Sequence::PerlOOSeq
                     ->grab_outline_text(qw(t/roller.methods t/roller));
 
-use Data::Dumper; print Dumper($out_rec);
 chomp(my @correct_out = <DATA>);
 
-is_deeply($out_rec, \@correct_out, "perl OOCallSeq trace");
+unless (is_deeply($out_rec, \@correct_out, "perl OOCallSeq trace")) {
+    local $" = "\n";
+    diag("unexpected trace output @$out_rec\n");
+}
 
 my $methods     = UML::Sequence::PerlOOSeq->grab_methods($out_rec);
 
@@ -24,7 +26,10 @@ my @correct_methods = (
 "DiePair::doubles",
 );
 
-is_deeply($methods, \@correct_methods, "method list");
+unless (is_deeply($methods, \@correct_methods, "method list")) {
+    local $" = "\n";
+    diag("unexpected method list @$methods\n");
+}
 
 unlink "tmon.out";
 

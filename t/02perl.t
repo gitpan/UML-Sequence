@@ -10,7 +10,10 @@ my $out_rec     = UML::Sequence::PerlSeq
 
 chomp(my @correct_out = <DATA>);
 
-is_deeply($out_rec, \@correct_out, "perl CallSeq trace");
+unless (is_deeply($out_rec, \@correct_out, "perl CallSeq trace")) {
+    local $" = "\n";
+    diag("unexpected trace output @$out_rec\n");
+}
 
 my $methods     = UML::Sequence::PerlSeq->grab_methods($out_rec);
 
@@ -24,7 +27,10 @@ my @correct_methods = (
 );
 
 #"DiePair::to_string",
-is_deeply($methods, \@correct_methods, "method list");
+unless (is_deeply($methods, \@correct_methods, "method list")) {
+    local $" = "\n";
+    diag("unexpected method list @$methods\n");
+}
 
 unlink "tmon.out";
 

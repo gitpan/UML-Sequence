@@ -9,3 +9,9 @@ Revision history for Perl extension UML::Sequence.
       so these no longer conflate distinct instances onto the same life line
 
       Added samples directory with instructions for making them.
+
+0.03  Mon Mar 10 13:41:26 CST 2003
+      Modified Makefile.PL so the shebang line will be right more often.
+
+      Added output to failing tests so I have a better chance to see what
+      is wrong on someone else's box.

@@ -41,7 +41,7 @@ require 5.005_62;
 use strict;
 use warnings;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use UML::Sequence::Activation;
 
@@ -262,6 +262,7 @@ sub _build_class_list {
                  lines.
                  Included samples directory with instructions for producing
                  the samples (see samples/README in the distribution).
+  0.03 Mar 2003  See Changes file (this release didn't affect this file)
 
 =head1 AUTHOR
  

@@ -1,6 +1,6 @@
 Changes
-genericseq.pl
-seq2svg.pl
+genericseq.source
+seq2svg.source
 Sequence.pm
 MANIFEST
 Makefile.PL

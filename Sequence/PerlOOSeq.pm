@@ -20,7 +20,7 @@ OR
 use strict;
 use warnings;
 
-our $VERSION = "0.01";
+our $VERSION = "0.02";
 
 my $methods_file;
 
@@ -45,7 +45,7 @@ sub _profile {
 
 sub _read_tmon {
     my @retval;
-    open TMON, "tmon.out" or die "Couldn't run dprofpp\n";
+    open TMON, "tmon.out" or die "Couldn't run under Devel::OOCallSeq $!\n";
     while (<TMON>) {
         chomp;
         push @retval, $_;
@@ -94,5 +94,7 @@ sub parse_signature {
 #                    I use Devel::OOCallSeq instead of Devel::CallSeq.
 #                    So, this script has one life line per instance instead
 #                    of one life line per class.
+# 0.02  Mar 08, 2003 Corrected error message when _read_tmon can't read the
+#                    tmon.out file which should have been created in _profile.
 
 1;
