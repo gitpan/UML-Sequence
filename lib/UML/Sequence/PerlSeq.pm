@@ -18,8 +18,8 @@ OR
 =head1 DESCRIPTION
 
 This file must be used by a script.  On demand it will form an outline by
-running the supplied program with -d:DProf and interpreting the output with
-dprofpp.  Both of these tools ship with Perl.  This has been developed on
+running the supplied program with -d:UML::CallSeq which is included in
+the UML::Sequence distribution.  This has been developed on
 Cygwin under Windows 2000 and tested on Red Hat Linux 7.1.
 
 The methods file should list methods you WANT to hear about.  If it isn't

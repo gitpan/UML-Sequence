@@ -1,20 +1,15 @@
 Revision history for Perl extension UML::Sequence.
 
-0.01  Sat Jan 18 12:49:35 2003
-	- original version; created by h2xs 1.20 with options
-		-XA -n UML::Sequence
-
-0.02  Fri Feb 28 08:06:52 CST 2003
-      Introduced UML::Sequence::PerlOOSeq and modified UML::Sequence::JavaSeq
-      so these no longer conflate distinct instances onto the same life line
-
-      Added samples directory with instructions for making them.
-
-0.03  Mon Mar 10 13:41:26 CST 2003
-      Modified Makefile.PL so the shebang line will be right more often.
-
-      Added output to failing tests so I have a better chance to see what
-      is wrong on someone else's box.
+0.05  Tue Sep 30 13:50:54 CDT 2003
+      Corrected NAME entry in pod for genericseq.source so that html links
+      on CPAN are not broken for it.
+      Corrected t/03java.t to reflect the new instance oriented approach
+      (boxes at the top of the diagram now have instance names in addition
+      to class names).
+      Corrected directory structure so Devel modules deploy correctly.
+      Expanded samples README to explain that method and function are
+      interchangeable so far as the modules are concerned.
+      Cleaned test directory.
 
 0.04  Tue Mar 11 08:10:33 CST 2003
       Changed t/02perl.t and t/03perl.t so they ignore the first line of the
@@ -22,3 +17,20 @@ Revision history for Perl extension UML::Sequence.
       the first line is '    (eval)' instead of 'main'.  I think the effect
       on the pictures will be minor: (eval) will replace main as the label
       for the left most class box (but I could be wrong).
+
+0.03  Mon Mar 10 13:41:26 CST 2003
+      Modified Makefile.PL so the shebang line will be right more often.
+
+      Added output to failing tests so I have a better chance to see what
+      is wrong on someone else's box.
+
+0.02  Fri Feb 28 08:06:52 CST 2003
+      Introduced UML::Sequence::PerlOOSeq and modified UML::Sequence::JavaSeq
+      so these no longer conflate distinct instances onto the same life line
+
+      Added samples directory with instructions for making them.
+
+0.01  Sat Jan 18 12:49:35 2003
+	- original version; created by h2xs 1.20 with options
+		-XA -n UML::Sequence
+

@@ -87,7 +87,7 @@ sub offset {
   return $self->{OFFSET};
 }
 
-=head find_offset
+=head1 find_offset
 
 This class method takes a reference to an array of activations and returns
 the number of them which are open (have undef ends attribute).  Pass in the

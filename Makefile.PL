@@ -4,6 +4,19 @@ use ExtUtils::MakeMaker;
 
 my @executables;
 
+print <<EOJ;
+This distribution can sometimes be used to diagram Java programs by running
+them.  For this to work, you must have the Sun SDK installed.  That SDK must
+have a tools.jar, which must be in the classpath when you use
+UML::Sequence::JavaSeq.  Further, the classpath must also include Seq.java
+found in the java directory of the distribution.  See README
+and samples/README for details.
+
+During testing, I will try to find your SDK and its tools.jar, which I
+will temporarily insert into the classpath.  If I can't do that, I will
+skip the Java tests.
+EOJ
+
 use Config;
 foreach my $source ('genericseq.source', 'seq2svg.source') {
     my    $script      = $source;
@@ -22,10 +35,11 @@ foreach my $source ('genericseq.source', 'seq2svg.source') {
 
 WriteMakefile(
     'NAME'		=> 'UML::Sequence',
-    'VERSION_FROM'	=> 'Sequence.pm', # finds $VERSION
-    'PREREQ_PM'		=> { XML::DOM => 1.25 }, # e.g., Module::Name => 1.1
+    'VERSION_FROM'	=> 'lib/UML/Sequence.pm', # finds $VERSION
+    'PREREQ_PM'		=> { XML::DOM   => 1.25,
+                             Test::More => 0,}, # e.g., Module::Name => 1.1
     ($] >= 5.005 ?
-      ( ABSTRACT_FROM   => 'Sequence.pm',
+      ( ABSTRACT_FROM   => 'lib/UML/Sequence.pm',
         AUTHOR          => 'Phil Crow <philcrow2000@yahoo.com>'
       )    :   ()
     ),

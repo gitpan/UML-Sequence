@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 
 BEGIN { use_ok('UML::Sequence::JavaSeq'); }
 
@@ -22,8 +22,8 @@ unless ($java_failed) {
 }
 
 SKIP: {
-    skip "No Java found",                           1 if $java_failed;
-    skip "No tools.jar found, I tried: $tools_jar", 1 if $tool_failed;
+    skip "No Java found",                           2 if $java_failed;
+    skip "No tools.jar found, I tried: $tools_jar", 2 if $tool_failed;
 
     chdir "java";
 
@@ -34,10 +34,18 @@ SKIP: {
 
     is_deeply($out_rec, \@correct_out, "java sequence outline");
 
-# This used to be in the test suite:
-#    my $methods     = UML::Sequence::JavaSeq->grab_methods($out_rec);
-# It is no longer included, because JavaSeq->grab_methods is inherited
-# from SimpleSeq->grab_methods and so has already been tested in 01simple.t
+    my $methods     = UML::Sequence::JavaSeq->grab_methods($out_rec);
+
+    my @correct_methods = (
+        "Hello.main(java.lang.String[])\n",
+        "HelloHelper.<init>()\n",
+        "HelloHelper.<init>(java.lang.String)\n",
+        "HelloHelper.printIt(java.lang.String, float, java.lang.String[][], HelloHelper)\n",
+    );
+
+    my @methods = sort keys %$methods;
+
+    is_deeply(\@methods, \@correct_methods, "method list");
 
 }
 

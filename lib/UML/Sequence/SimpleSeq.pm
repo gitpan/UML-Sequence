@@ -85,6 +85,7 @@ sub grab_methods {
     foreach (@$outline) {
         my $line = $_;
         $line    =~ s/^\s+//;
+        $line    =~ s/^[^:]+://;
         $methods{$line}++;
     }
     return \%methods;

@@ -1,8 +1,8 @@
-Here are the examples in this directory:
+Here are the examples in the samples directory of the distribution directory:
 
 PERL:
 
-Instances show up separately:
+Object Oriented - Instances show up separately:
 
 rollerinst     - a script which rolls two DiePairs
 DiePair.pm     - an OO module which manages two Die objects
@@ -13,7 +13,7 @@ rollerinst.svg - that sequence diagram in svg format
 rollerinst.png - that sequence diagram in png format
 
 These diagrams were produced with these commands:
-genericseq.pl PerlOOSeq methods rollerinst > rollerinst.xml
+genericseq.pl PerlOOSeq roller.methods rollerinst > rollerinst.xml
 seq2svg.pl rollerinst.xml > rollerinst.svg
 cd $BATIK_HOME
 java -jar batik-rasterizer.jar ~/samples/rollerinst.svg
@@ -22,7 +22,9 @@ Using PerlOOSeq separates the two DiePair instances into separate columns
 in the diagram.  It does the same for all four Die instances.  See below
 for what happens when these are combined.
 
-Instances conflate onto a single life line:
+Function Oriented (or Object Oriented with one life line per class)
+Even though this example uses objects, you don't have to.  Remember
+that function and method in Perl are interchangeable in most cases.
 
 roller     - a script which rolls one DiePair
 DiePair.pm, Die.pm, and methods (see above)
@@ -31,7 +33,7 @@ roller.svg - that sequence diagram in svg format
 roller.png - that sequence diagram in png format
 
 These diagrams were produced with these commands:
-genericseq.pl PerlSeq methods roller > roller.xml
+genericseq.pl PerlSeq roller.methods roller > roller.xml
 seq2svg.pl roller.xml > roller.svg
 cd $BATIK_HOME
 java -jar batik-rasterizer.jar ~/samples/roller.svg
@@ -40,6 +42,11 @@ Using PerlSeq conflates all instances of any class onto the same life line.
 Note that both Die objects share a single life line in the picture.
 For many Perl programs there are no objects and this is ideal.  For genuine
 multi-object programs, see PerlOOSeq above.
+
+This approach is better for function oriented programs.  Just substitute
+function for method in all descriptions.  Just as Die::new is the constructor
+of the die class, FuncPack::roll is the roll function in the FuncPack package.
+The default package is always main.
 
 TEXT OUTLINES:
 
