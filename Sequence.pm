@@ -41,7 +41,7 @@ require 5.005_62;
 use strict;
 use warnings;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use UML::Sequence::Activation;
 
@@ -255,14 +255,12 @@ sub _build_class_list {
 }
 
 1;
-=head1 EDIT HISTORY
-
-  0.01 Jan 2003  Initial release.
-  0.02 Feb 2003  Corrected diagrams so separate instances have their own life
-                 lines.
-                 Included samples directory with instructions for producing
-                 the samples (see samples/README in the distribution).
-  0.03 Mar 2003  See Changes file (this release didn't affect this file)
+# EDIT HISTORY
+#
+# 0.01 Jan 2003  Initial release.
+# 0.02 Feb 2003  See Changes file (this release didn't affect this file)
+# 0.03 Mar 2003  See Changes
+# 0.04 Mar 2003  See Changes
 
 =head1 AUTHOR
  

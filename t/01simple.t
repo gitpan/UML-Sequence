@@ -9,7 +9,10 @@ my $out_rec     = UML::Sequence::SimpleSeq->grab_outline_text('t/washcar');
 
 my @correct_out = <DATA>;
 
-is_deeply($out_rec, \@correct_out, "simple outline read");
+unless (is_deeply($out_rec, \@correct_out, "simple outline read")) {
+    local $" = "";
+    diag("bad outline\n@$out_rec\n");
+}
 
 my $methods     = UML::Sequence::SimpleSeq->grab_methods($out_rec);
 my @methods     = sort keys %$methods;
@@ -30,7 +33,10 @@ my @correct_methods = (
 "Kitchen.prepare bucket\n",
 );
 
-is_deeply(\@methods, \@correct_methods, "method list");
+unless (is_deeply(\@methods, \@correct_methods, "method list")) {
+    local $" = "";
+    diag("bad method list\n@methods\n");
+}
 
 __DATA__
 At Home.Wash Car

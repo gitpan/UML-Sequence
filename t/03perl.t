@@ -8,11 +8,14 @@ BEGIN { use_ok('UML::Sequence::PerlOOSeq'); }
 my $out_rec     = UML::Sequence::PerlOOSeq
                     ->grab_outline_text(qw(t/roller.methods t/roller));
 
+shift @$out_rec;  # some Perl's make the first line main, others say (eval)
+                  # to avoid a false error, discard the first line
+
 chomp(my @correct_out = <DATA>);
 
 unless (is_deeply($out_rec, \@correct_out, "perl OOCallSeq trace")) {
     local $" = "\n";
-    diag("unexpected trace output @$out_rec\n");
+    diag("unexpected trace output\n@$out_rec\n");
 }
 
 my $methods     = UML::Sequence::PerlOOSeq->grab_methods($out_rec);
@@ -34,7 +37,6 @@ unless (is_deeply($methods, \@correct_methods, "method list")) {
 unlink "tmon.out";
 
 __DATA__
-main
   diePair1:DiePair::new
     die1:Die::new
     die2:Die::new

@@ -15,3 +15,10 @@ Revision history for Perl extension UML::Sequence.
 
       Added output to failing tests so I have a better chance to see what
       is wrong on someone else's box.
+
+0.04  Tue Mar 11 08:10:33 CST 2003
+      Changed t/02perl.t and t/03perl.t so they ignore the first line of the
+      sequence outline.  On some Perls (including a 5.8 on Solaris 2.4)
+      the first line is '    (eval)' instead of 'main'.  I think the effect
+      on the pictures will be minor: (eval) will replace main as the label
+      for the left most class box (but I could be wrong).
