@@ -1,0 +1,85 @@
+#!/usr/bin/perl -w
+use strict;
+
+my $dice = new DiePair(6, 6);
+my $total;
+my $doubles;
+my $point;
+my $loser = 0;
+my $winner = 0;
+
+for (my $i = 0; $i < 1; $i++) {
+    $dice->roll();
+    $total   = $dice->total();
+    $doubles = $dice->doubles();
+    print "$dice\n";
+    print "$total $doubles\n";
+}
+
+package Die;
+
+sub new {
+  my $class      = shift;
+  my $sides      = shift || 6; # make the default 6
+  my $self       = {};
+  $self->{SIDES} = $sides;
+
+  bless  $self, $class;
+  return $self;
+}
+
+sub roll {
+  my $self          = shift;
+  my $random_number = rand;
+
+  $self->{VALUE}    = int ($random_number * $self->{SIDES}) + 1;
+  return $self->{VALUE};
+}
+
+package DiePair;
+
+use overload
+    '""' => \&to_string;
+
+sub new {
+  my $class = shift;
+  my $self = {};
+  bless $self, $class;
+
+  $self->{di1} = new Die(shift);
+  $self->{di2} = new Die(shift);
+
+  return $self;
+}
+
+sub roll {
+  my $self = shift;
+
+  $self->{value1} = $self->{di1}->roll();
+  $self->{value2} = $self->{di2}->roll();
+  $self->{totalpoints} = $self->{value1} + $self->{value2};
+  if ($self->{value1} == $self->{value2}) {
+    $self->{wasitdoubles} = 1;
+  }
+  else {
+    $self->{wasitdoubles} = 0;
+  }
+}
+
+sub total {
+  my $self = shift;
+  return $self->{totalpoints};
+}
+
+sub doubles {
+  my $self = shift;
+  return $self->{wasitdoubles};
+}
+
+sub to_string {
+  my $self = shift;
+
+  return "You rolled $self->{value1} and $self->{value2}";
+}
+
+1;
