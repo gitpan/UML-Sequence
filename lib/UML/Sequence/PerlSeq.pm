@@ -110,10 +110,4 @@ sub parse_signature {
     return wantarray ? ($class, $method) : $class;
 }
 
-# EDIT HISTORY:
-# 0.01  Jan 27, 2003  Initial Release
-# 0.02  Feb 28, 2003  Began using Devel::CallSeq instead of Devel::DProf
-#                     and dprofpp -T, this corrects some of the method names
-#                     which DProf incorrectly reports as BEGIN
-
 1;

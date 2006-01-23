@@ -1,6 +1,6 @@
 =head1 NAME
 
-UML::Sequence - This package makes UML sequence diagrams, often by running the code.
+UML::Sequence - Render UML sequence diagrams, often by running the code.
 
 =head1 SYNOPSIS
 
@@ -23,7 +23,8 @@ To control the appearance of the sequence diagram, pass to the constructor:
 1 a reference to an array containing the signatures you want to hear about
   or a reference to a hash whose keys are the signatures you want
 2 a reference to an array containing the lines in the outline of calls
-3 a reference to a sub which takes signatures and returns class and method names
+3 a reference to a sub which takes signatures and returns class and method
+  names
 
 To build the array references and supply the code reference consult
 UML::Sequence::SimpleSeq, UML::Sequence::JavaSeq, or UML::Sequence::PerlSeq.
@@ -41,7 +42,7 @@ require 5.005_62;
 use strict;
 use warnings;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use UML::Sequence::Activation;
 
@@ -50,6 +51,7 @@ sub new {
     my $methods_to_include = shift; # array or hash of methods you want to see
     my $input              = shift; # the outline of calls
     my $parse_signature    = shift; # code ref which returns class and method
+    my $grab_methods       = shift; # coderef to return method name
 
     my $methods_hash;
     if (ref($methods_to_include) =~ /ARRAY/) {
@@ -63,15 +65,19 @@ sub new {
     my $root = {
         LEVEL   => -1,
         DATA    => [],
-        NAME    => scalar &$parse_signature(shift @$input),
+        NAME    => scalar &$parse_signature($input->[0]),
+        INPUT   => $input->[0],
         DISCARD => 0,
     };
+
+    shift @$input;
 
     my $self = {};
     $self->{TREE}     = $root;
     $self->{STACK}    = $stack;
     $self->{INCLUDE}  = $methods_hash;
     $self->{SIGPARSE} = $parse_signature;
+    $self->{GRABMETHODS} = $grab_methods;
     bless $self, $class;
 
     push @$stack, $root;
@@ -81,9 +87,7 @@ sub new {
         my $input_line = $_;
         my $depth;
 
-        if ($input_line =~ s/^(\s+)//) { $depth = length $1; }
-        else                           { $depth = 0;         }
-
+        $depth = ($input_line =~ s/^(\s+)//) ? length($1) : 0;
         $self->_update_stack($input_line, $depth);
     }
     return $self;
@@ -119,24 +123,36 @@ sub _update_stack {
     my $self     = shift;
     my $method   = shift;
     my $level    = shift;
+
     my $new_node = {
          LEVEL   => $level,
          DATA    => [],
          NAME    => $method,
+#
+#   DAA save original input line, which may contain
+#   extra stuff
+#
+         INPUT   => $method,
 #        DISCARD => 0,
     };
 
-    while ($level <= $self->{STACK}[-1]{LEVEL}) {
-        pop @{$self->{STACK}};
-    }
+   pop @{$self->{STACK}}
+       while ($level <= $self->{STACK}[-1]{LEVEL});
 
     $new_node->{DISCARD} = $self->{STACK}[-1]{DISCARD};
-    unless (defined $self->{INCLUDE}{$method}) {
-        $new_node->{DISCARD} = 1;
-    }
+    unless (defined($self->{INCLUDE}{$method})) {
+#
+#   the line may have magic, try to capture the extra stuff
+#
+      my $methods = $self->{GRABMETHODS}->([ $method ]);
+      my @methods = keys %$methods;
+      $method = shift @methods;
+      $new_node->{DISCARD} = ($method && $self->{INCLUDE}{$method});
+   }
 
     push @{$self->{STACK}[-1]{DATA}}, $new_node;
     push @{$self->{STACK}}, $new_node;
+
 }
 
 sub print_tree {
@@ -168,6 +184,7 @@ sub build_xml_sequence {
 
     $self->{ARROW_NUM}  = 0;
     $self->{ARROW_LIST} = "<arrow_list>\n";
+
     $self->_build_xml_sequence($self->{TREE});
     $self->{ARROW_LIST} .= "</arrow_list>\n";
 
@@ -186,6 +203,7 @@ sub build_xml_sequence {
 sub _build_xml_sequence {
     my $self = shift;
     my $root = shift;  # you must pass this in, $self->{TREE} never changes
+    my $hasreturn = shift;
 
     # recursion bases
     return unless defined $root;
@@ -194,11 +212,10 @@ sub _build_xml_sequence {
     return unless defined $root_call;
 
     my $class = $self->{SIGPARSE}($root_call);
-
     # put into to class list, if it isn't already there
-    if (not defined $self->{ACTIVATIONS}{$class}) {
-        push @{$self->{CLASSES}}, $class;
-    }
+
+    push @{$self->{CLASSES}}, $class
+       unless defined $self->{ACTIVATIONS}{$class};
 
     # create activation and add it to the list for this class
     my $activation = UML::Sequence::Activation->new();
@@ -208,25 +225,84 @@ sub _build_xml_sequence {
     $activation->offset($offset);
 
     push @{$self->{ACTIVATIONS}{$class}}, $activation;
-
+    my $asyncs = 0;
     # visit children
     foreach my $child (@{$root->{DATA}}) {
         next if $child->{DISCARD};
+#
+#   DAA updated to report returnlist, iterator, conditional, urgency,
+#   and annotation
+#
+        my ($child_class, $method, $returns, $iterator, $urgent, $condition,
+            $annot) =
+           $self->{SIGPARSE}($child->{INPUT});
 
-        my ($child_class, $method) = $self->{SIGPARSE}($child->{NAME});
         my $child_offset =
             UML::Sequence::Activation
-                ->find_offset($self->{ACTIVATIONS}{$child_class});
+                ->find_offset($self->{ACTIVATIONS}{$child_class})
+                unless ($child_class eq '_EXTERNAL');
+
+#
+#   DAA add pending annotation
+#
+      my $closetag = "/>\n";
+#
+#   until we figure out how to use CDATA and a text element w/
+#   XML::DOM, we'll have to force dquotes to squotes
+#
+      $annot=~s/"/'/g,
+        $closetag =
+           ">\n<annotation text=\"$annot\" />\n</arrow>\n",
+        $annot = undef
+           if $annot;
 
         $self->{ARROW_NUM}++;
+        $method=~s/\s+$//;
+        $method .= ' !' if $urgent;
+        $method = '* ' . $method if $iterator;
+        $method = "$condition $method" if $condition;
+        my $type = ($child_class eq '_EXTERNAL') ? 'async' : 'call';
+        $asyncs++ if ($type eq 'async');
+        $self->{ARROW_LIST} .= ($type eq 'async') ?
+"  <arrow from='_EXTERNAL' to='$class' type='async' label='$method'
+         from-offset='$offset' to-offset='$offset' $closetag" :
+
+"  <arrow from='$class' to='$child_class' type='call' label='$method'
+         from-offset='$offset' to-offset='$child_offset' $closetag";
+#
+#   recurse to handle called class/method
+#
+        $self->_build_xml_sequence($child, $returns)
+           unless ($type eq 'async');
+#
+#   DAA add return values if any
+#
         $self->{ARROW_LIST} .=
-          "  <arrow from='$class' to='$child_class' type='call' " .
-          "label='$method'\n"                                     .
-          "         from-offset='$offset' to-offset='$child_offset' />\n";
-        $self->_build_xml_sequence($child);
+"  <arrow from='$child_class' to='$class' type='return' label='$returns'\n
+         from-offset='$child_offset' to-offset='$offset' />\n"
+          if $returns;
     }
 
+   $self->{ARROW_NUM}++
+       if $hasreturn;
+
     $activation->ends($self->{ARROW_NUM});
+#
+#   if outermost, and it had an external, add external class
+#   to output
+#
+   if ($asyncs && ($self->{TREE}{NAME} eq $root->{NAME})) {
+      unshift @{$self->{CLASSES}}, '_EXTERNAL';
+    # create activation and add it to the list for this class
+      my $activation = UML::Sequence::Activation->new();
+      $activation->starts(0);
+      my $offset = UML::Sequence::Activation
+        ->find_offset($self->{ACTIVATIONS}{_EXTERNAL});
+      $activation->offset($offset);
+      $activation->ends($self->{ARROW_NUM});
+
+      push @{$self->{ACTIVATIONS}{_EXTERNAL}}, $activation;
+   }
 }
 
 sub _build_class_list {
@@ -255,26 +331,24 @@ sub _build_class_list {
 }
 
 1;
-# EDIT HISTORY
-#
-# 0.01 Jan 2003  Initial release.
-# 0.02 Feb 2003  See Changes file (this release didn't affect this file)
-# 0.03 Mar 2003  See Changes
-# 0.04 Mar 2003  See Changes
 
 =head1 AUTHOR
- 
+
 Phil Crow, <philcrow2000@yahoo.com>
-  
+Version 0.06 updates by Dean Arnold, <darnold@presicient.com>
+
 =head1 SEE ALSO
 
 L<genericseq.pl>
 L<seq2svg.pl>
+L<seq2rast.pl>
 
 =head1 COPYRIGHT
-   
-Copyright 2003, Philip Crow, all rights reserved.  You may modify and/or
-redistribute this code in the same manner as Perl itself.
+
+Copyright(C) 2003-2006, Philip Crow, all rights reserved.
+
+You may modify and/or redistribute this code in the same manner as
+Perl itself.
 
 =cut
 

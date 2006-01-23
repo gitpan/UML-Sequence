@@ -10,7 +10,8 @@ my $outline     = UML::Sequence::SimpleSeq->grab_outline_text('t/washcar');
 my $methods     = UML::Sequence::SimpleSeq->grab_methods($outline);
 
 my $tree = UML::Sequence
-    ->new($methods, $outline, \&UML::Sequence::SimpleSeq::parse_signature);
+    ->new($methods, $outline, \&UML::Sequence::SimpleSeq::parse_signature,
+         \&UML::Sequence::SimpleSeq::grab_methods);
 
 my @xml_out = split /\n/, $tree->build_xml_sequence('Washing the Car');
 

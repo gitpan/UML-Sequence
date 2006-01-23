@@ -1,6 +1,7 @@
 Changes
 genericseq.source
 seq2svg.source
+seq2rast.source
 lib/UML/Sequence.pm
 MANIFEST
 Makefile.PL
@@ -11,6 +12,7 @@ lib/UML/Sequence/Activation.pm
 lib/UML/Sequence/JavaSeq.pm
 lib/UML/Sequence/PerlSeq.pm
 lib/UML/Sequence/PerlOOSeq.pm
+lib/UML/Sequence/Raster.pm
 lib/UML/Sequence/SimpleSeq.pm
 lib/UML/Sequence/Svg.pm
 java/Hello.java
@@ -32,11 +34,17 @@ t/03perloo.t
 t/04java.t
 t/05sequence.t
 t/06svg.t
+t/07deluxe.t
+t/08edeluxesvg.t
+t/09jdeluxesvg.t
+t/10raster.t
 t/roller
 t/roller.methods
 t/washcar
 t/washcar.svg
 t/washcar.xml
+t/deluxewash.seq
+t/deluxewash.xml
 samples/Die.java
 samples/DiePair.java
 samples/DiePair.pm
@@ -44,6 +52,7 @@ samples/Die.pm
 samples/README
 samples/roller
 samples/rollerinst
+samples/rollerinst.methods
 samples/rollerinst.png
 samples/rollerinst.svg
 samples/rollerinst.xml
@@ -52,6 +61,7 @@ samples/Rollerjava.methods
 samples/rollerjava.png
 samples/rollerjava.svg
 samples/rollerjava.xml
+samples/roller.methods
 samples/roller.png
 samples/roller.svg
 samples/roller.xml
@@ -59,3 +69,9 @@ samples/washcar
 samples/washcar.png
 samples/washcar.svg
 samples/washcar.xml
+samples/deluxewash.seq
+samples/deluxewash.png
+samples/deluxewash.svg
+samples/deluxewash.html
+samples/deluxewash.xml
+META.yml                                 Module meta-data (added by MakeMaker)

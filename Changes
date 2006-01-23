@@ -1,5 +1,42 @@
 Revision history for Perl extension UML::Sequence.
 
+0.06	Tue Jan 31 2006 (D. Arnold)
+	- significat updates to UML::Sequence::SimpleSeq:
+		- '*' iterator indicator
+		- '->' async event intro indicator; renders as halfarrow
+		- '!' urgent indicator (for PSiCHE/Thread::Apartment)
+		- '[text]' conditional indicator
+		- '/*' annotation '*/' support
+		- 'class.method -> returns' syntax
+
+	- updated genericseq.source to add grab_methods() ref to 
+		build_xml_sequence() params
+
+	- updated UML::Sequence::Svg:
+		- added '-[pP] pathname' option to specify classdocs path; 
+			renders as hyperlinks for classnames and methods
+		- added '-c color' to render color of class boxes
+		- added '-a color' to render color of activation boxes
+		- added rendering of return arrows
+		- changed arrow label positions to cuddle arrowheads
+		- slightly increased arrowhead size
+		- added -x charWidth, -y charHeight options to specify text sizes
+		- added text wrapping for class names to fit class boxes
+		- added -g arrow-gap option to adjust inter-arrow spacing
+		- added -[mM] html-file imagemap option
+		- added -w classBoxWidth option to adjust spacing of class boxes
+		- added -e option to render ordered list of annotations
+			after imagemap, and append superscript w/ hyperlinks
+			to the annotation to the arrow labels
+		- added -j option to render annotations as Javascript'ed
+			tooltips in the imagemap links
+
+	- added deluxewash samples
+	- added 07deluxe.t, 08edeluxesvg.t, 09jdeluxe.t, 10raster.t to tests
+	- added UML::Sequence::Raster.pm, which renders a raster image
+		of the diagram using GD/GD::Text
+	- removed "EDIT HISTORY" sections from all modules
+
 0.05  Tue Sep 30 13:50:54 CDT 2003
       Corrected NAME entry in pod for genericseq.source so that html links
       on CPAN are not broken for it.

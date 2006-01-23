@@ -7,12 +7,12 @@ use     warnings;
 UML::Sequence::PerlOOSeq - helper for genericseq.pl showing object instances
 
 =head1 SYNOPSIS
- 
+
      genericseq.pl UML::Sequence::PerlOOSeq methods_file perl_program [args...] > sequence.xml
      seq2svg.pl sequence.xml > sequence.svg
-          
+
 OR
-           
+
      genericseq.pl UML::Sequence::PerlOOSeq methods_file program [args...] | seq2svg.pl > sequence.svg
 
 =cut
@@ -87,14 +87,5 @@ sub parse_signature {
 
     return wantarray ? ($class, $method) : $class;
 }
-
-# EDIT HISTORY:
-# 0.01  Feb 28, 2003 Initial Release (with UML-Sequence-0.02)
-#                    This code is only a slight revision of PerlSeq.  Here
-#                    I use Devel::OOCallSeq instead of Devel::CallSeq.
-#                    So, this script has one life line per instance instead
-#                    of one life line per class.
-# 0.02  Mar 08, 2003 Corrected error message when _read_tmon can't read the
-#                    tmon.out file which should have been created in _profile.
 
 1;

@@ -48,7 +48,7 @@ sub grab_outline_text {
     my $method_file     = shift;
 
     `java Seq $method_file SEQ.TMP @_ > /dev/null`;
-    
+
     open SEQ, "SEQ.TMP" or die "Couldn't run java Seq: $!\n";
     while (<SEQ>) {
         push @retval, $_;
@@ -58,11 +58,5 @@ sub grab_outline_text {
     unlink "SEQ.TMP";
     return \@retval;
 }
-
-#  Edit History
-#  0.01 Jan 28 2003  Initial Release
-#  0.02 Feb 27 2003  Revised backtick command so STDERR from the java Seq
-#                    comes to the screen (before it went to /dev/null)
-#                    Revised Seq.java so it shows instances separately
 
 1;

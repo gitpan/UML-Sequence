@@ -13,7 +13,7 @@ rollerinst.svg - that sequence diagram in svg format
 rollerinst.png - that sequence diagram in png format
 
 These diagrams were produced with these commands:
-genericseq.pl PerlOOSeq roller.methods rollerinst > rollerinst.xml
+genericseq.pl UML::Sequence::PerlOOSeq rollerinst.methods rollerinst > rollerinst.xml
 seq2svg.pl rollerinst.xml > rollerinst.svg
 cd $BATIK_HOME
 java -jar batik-rasterizer.jar ~/samples/rollerinst.svg
@@ -33,7 +33,7 @@ roller.svg - that sequence diagram in svg format
 roller.png - that sequence diagram in png format
 
 These diagrams were produced with these commands:
-genericseq.pl PerlSeq roller.methods roller > roller.xml
+genericseq.pl UML::Sequence::PerlSeq roller.methods roller > roller.xml
 seq2svg.pl roller.xml > roller.svg
 cd $BATIK_HOME
 java -jar batik-rasterizer.jar ~/samples/roller.svg
@@ -56,7 +56,7 @@ washcar.svg - that diagram in svg format
 washcar.png - that diagram in png format
 
 These diagrams were produced with these commands:
-genericseq.pl -t "Wash Car" SimpleSeq washcar > washcar.xml
+genericseq.pl -t "Wash Car" UML::Sequence::SimpleSeq washcar > washcar.xml
 seq2svg.pl washcar.xml > washcar.svg
 java -jar batik-rasterizer.jar ~/samples/washcar.svg
 
@@ -64,6 +64,23 @@ Using SimpleSeq you can easily produce a diagram from a text file in few
 minutes (or seconds).
 Any invocation of genericseq.pl can include a -t title flag as shown in
 the washcar example.
+
+Additionally, a "deluxe" wash is available:
+
+deluxewash.seq  - a text file outlining the steps in washing a car
+deluxewash.xml - a sequence diagram for washing the car
+deluxewash.svg - that diagram in svg format
+deluxewash.png - that diagram in png format
+deluxewash.html - HTML using the PNG output
+
+These diagrams were produced with these commands:
+
+genericseq.pl -t "Wash Car" UML::Sequence::SimpleSeq deluxewash.seq > deluxewash.xml
+seq2svg.pl -m deluxewash.html -P ./ -c #80ffff -a yellow -e -o deluxewash.svg deluxewash.xml 
+seq2rast.pl -m deluxewash.html -P ./ -c #80ffff -a yellow -e -o deluxewash.png deluxewash.xml 
+
+NOTE: Using "-j" instead of "-e" produces tooltip'd annotations, but requires
+a (free) third party Javascript file.
 
 JAVA:
 
@@ -76,7 +93,7 @@ rollerjava.svg     - that diagram in svg format
 rollerjava.png     - that diagram in png format
 
 These diagrams were produced with these commands:
-genericseq.pl JavaSeq Rollerjava.methods Roller > rollerjava.xml
+genericseq.pl UML::Sequence::JavaSeq Rollerjava.methods Roller > rollerjava.xml
 seq2svg.pl rollerjava.xml > rollerjava.svg
 java -jar batik-rasterizer.jar ~/samples/rollerjava.svg
 

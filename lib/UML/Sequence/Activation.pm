@@ -138,10 +138,6 @@ sub find_bounds {
 
 1;
 
-=head1 EDIT HISTORY
-
-  0.01 Jan 2003  Initial release.
-
 =head1 AUTHOR
 
 Phil Crow, <philcrow2000@yahoo.com>

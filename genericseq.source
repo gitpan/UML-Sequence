@@ -39,6 +39,7 @@ my $style       = shift;
 my $outline;
 my $methods;
 my $parse_method;
+my $grab_methods;
 
 {
     no      strict;
@@ -49,9 +50,10 @@ my $parse_method;
     $outline      = $style->grab_outline_text(@ARGV);
     $methods      = $style->grab_methods($outline);
     $parse_method = $style->can(parse_signature);
+    $grab_methods = $style->can(grab_methods);
 }
 
-my $tree = UML::Sequence->new($methods, $outline, $parse_method);
+my $tree = UML::Sequence->new($methods, $outline, $parse_method, $grab_methods);
 
 print($tree->build_xml_sequence($opt_t));
 

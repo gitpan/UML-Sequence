@@ -12,8 +12,8 @@ Do the standard things:
 
 COPYRIGHT and LICENSE
 
-Copyright 2003, Philip Crow.  All rights reserved.  You may distribute
-and/or modify these programs under the same terms as Perl itself.
+Copyright 2003-6, Philip Crow.  All rights reserved.  You may distribute
+and/or modify these programs under the same terms as Perl 5.8 itself.
 
 DESCRIPTION
 
@@ -38,9 +38,13 @@ At Home.Wash Car
     Garage.replace sponge
     Garage.replace bucket
 
-Then do this:
+Then do this (to generate SVG output):
 
     genericseq.pl UML::Sequence::SimpleSeq inputfile | seq2svg.pl > output.svg
+
+or this (to generate raster image output, e.g., PNG):
+
+    genericseq.pl UML::Sequence::SimpleSeq inputfile | seq2rast.pl > output.png
 
 Perl Sequences
 
