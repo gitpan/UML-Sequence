@@ -42,7 +42,7 @@ require 5.005_62;
 use strict;
 use warnings;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use UML::Sequence::Activation;
 
@@ -141,14 +141,22 @@ sub _update_stack {
 
     $new_node->{DISCARD} = $self->{STACK}[-1]{DISCARD};
     unless (defined($self->{INCLUDE}{$method})) {
-#
-#   the line may have magic, try to capture the extra stuff
-#
-      my $methods = $self->{GRABMETHODS}->([ $method ]);
-      my @methods = keys %$methods;
-      $method = shift @methods;
-      $new_node->{DISCARD} = ($method && $self->{INCLUDE}{$method});
-   }
+        #
+        #   the line may have magic, try to capture the extra stuff
+        #
+        my $methods = $self->{GRABMETHODS}->([ $method ]);
+
+        my @methods;
+        if ( ref( $methods ) eq 'ARRAY' ) {
+            @methods = @{ $methods };
+        }
+        else {
+            @methods = keys %$methods;
+        }
+
+        $method = shift @methods;
+        $new_node->{DISCARD} = ($method && $self->{INCLUDE}{$method});
+    }
 
     push @{$self->{STACK}[-1]{DATA}}, $new_node;
     push @{$self->{STACK}}, $new_node;

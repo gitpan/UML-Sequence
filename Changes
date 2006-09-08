@@ -1,5 +1,11 @@
 Revision history for Perl extension UML::Sequence.
 
+0.07 Fri Sep  8 17:42:58 CDT 2006
+    - Corrected error that disallowed array ref returns from grab_methods.
+      That caused the PerlSeq and PerlOOSeq backends to fail, since that's
+      what they choose to return.  Thanks to CPAN user NKH for pointing
+      this out with enough detail for me to fix it.
+
 0.06	Tue Jan 31 2006 (D. Arnold)
 	- significat updates to UML::Sequence::SimpleSeq:
 		- '*' iterator indicator
