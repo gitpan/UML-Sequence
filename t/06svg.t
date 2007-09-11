@@ -15,7 +15,7 @@ my $tree = UML::Sequence
 
 # run the seq2svg.pl script against washcar.xml from the distribution
 
-open TESTSVG, "perl ./seq2svg.pl t/washcar.xml |"
+open TESTSVG, "$^X ./seq2svg.pl t/washcar.xml |"
         or die "Couldn't run seq2svg.pl: $!\n";
 my @test_svg = <TESTSVG>;
 close TESTSVG;

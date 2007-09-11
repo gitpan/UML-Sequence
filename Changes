@@ -1,5 +1,10 @@
 Revision history for Perl extension UML::Sequence.
 
+0.08 Tue Sep 11 17:08:45 CDT 2007
+    - Corrected test suite so tests needing to shell out call $^X to get
+      their perl instead of getting the firt perl in the path.
+      Thanks to Andreas Koenig for finding this problem.
+
 0.07 Fri Sep  8 17:42:58 CDT 2006
     - Corrected error that disallowed array ref returns from grab_methods.
       That caused the PerlSeq and PerlOOSeq backends to fail, since that's

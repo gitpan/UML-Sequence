@@ -15,7 +15,7 @@ my $tree = UML::Sequence
 
 # run the seq2svg.pl script against deluxewash.xml from the distribution
 
-open TESTSVG, "perl ./seq2svg.pl -m deluxewash.html -P ./ -c #80ffff -a yellow -e t/deluxewash.xml |"
+open TESTSVG, "$^X ./seq2svg.pl -m deluxewash.html -P ./ -c #80ffff -a yellow -e t/deluxewash.xml |"
         or die "Couldn't run seq2svg.pl: $!\n";
 my @test_svg = <TESTSVG>;
 close TESTSVG;
